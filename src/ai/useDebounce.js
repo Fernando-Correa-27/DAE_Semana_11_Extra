@@ -8,6 +8,7 @@ export default function useDebounce(value, delay) {
     timer.current = setTimeout(() => {
       setDebounced(value);
     }, delay);
+    return () => clearTimeout(timer.current);
   }, [value, delay]);
 
   useEffect(() => {
