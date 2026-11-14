@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const IDLE = { status: "idle", plan: null, result: null, error: null };
 
@@ -52,6 +52,12 @@ export default function useAgentRun(runAgent) {
     if (status !== "running" && status !== "awaiting_approval") return;
     controller.current?.abort();
     update(IDLE);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      controller.current?.abort();
+    };
   }, []);
 
   return { ...run, start, approve, reject };
