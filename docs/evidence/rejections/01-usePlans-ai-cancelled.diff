@@ -1,0 +1,29 @@
+diff --git a/src/ai/usePlans.js b/src/ai/usePlans.js
+index bac664c..aaeebba 100644
+--- a/src/ai/usePlans.js
++++ b/src/ai/usePlans.js
+@@ -7,24 +7,18 @@ export default function usePlans(fetchPlans) {
+   const [attempt, setAttempt] = useState(0);
+ 
+   useEffect(() => {
+-    let cancelled = false;
+     setPlans([]);
+     setStatus("loading");
+     setError(null);
+     fetchPlans()
+       .then((data) => {
+-        if (cancelled) return;
+         setPlans(data);
+         setStatus("ready");
+       })
+       .catch((err) => {
+-        if (cancelled) return;
+         setError(err);
+         setStatus("error");
+       });
+-    return () => {
+-      cancelled = true;
+-    };
+   }, [fetchPlans, attempt]);
+ 
+   const reload = useCallback(() => setAttempt((n) => n + 1), []);

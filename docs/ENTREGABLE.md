@@ -405,10 +405,12 @@ Tabla completa en `docs/ai-use-log.md` (se reproduce aquí):
 | 11 | Fallo 4: `src/ai/useAgentRun.js` aplica un R2 sin aprobación. | Condicioné el estado final al riesgo del plan. | Aceptado | Un R2 ya no llega a `done` sin `approve()`. | `7 failed \| 11 passed (18)` → `2 failed \| 16 passed (18)`; IA `9 failed` → `2 failed`. |
 | 12 | Fallo 5: `src/ai/useAgentRun.js` devuelve antes de `useRef` cuando falta `runAgent`. | Quité el `return` anticipado y moví la comprobación a `start`. | Aceptado | Los hooks se ejecutan siempre en el mismo orden. | `2 failed \| 16 passed (18)` → `1 failed \| 17 passed (18)`; IA `2 failed` → `1 failed`. |
 | 13 | Fallo 6: `src/ai/useAgentRun.js` no aborta la ejecución al desmontar. | Añadí un `useEffect` cuya limpieza llama a `controller.current?.abort()`. | Aceptado | La señal se aborta al desmontar y la suite de la IA queda en verde. | `1 failed \| 17 passed (18)` → `18 passed (18)`; IA `1 failed` → `57 passed (57)`. |
+| 14 | Parte 5: crear `docs/ENTREGABLE.md` en español con las seis secciones pedidas. | Redacté el documento completo con las cuatro preguntas por hook y evidencia verificada. | Aceptado | Incluye todo lo que pide la Parte 5. | `npm test` → `57 passed (57)`; `test:ai` → `57 passed (57)`; `build` → `✓ built in 663ms`. |
+| 15 | Revisar un candidato de simplificación de `src/ai/usePlans.js` (quitar la bandera `cancelled`). | Presenté el diff sin commitear y su evidencia: 4 pruebas de carrera en rojo. | **Rechazado** | «Respuesta vieja vuelve a pisar». | `npm run test:ai -- usePlans` → `4 failed \| 8 passed (12)`; diff en `docs/evidence/rejections/01-usePlans-ai-cancelled.diff`; tras restaurar, `12 passed (12)` y `57 passed (57)`. |
 
 ### Diffs rechazados
 
-Ninguno. No hubo rechazos durante el laboratorio, por lo que `docs/evidence/rejections/` está vacío.
+- **01 — `src/ai/usePlans.js`** (`01-usePlans-ai-cancelled.diff`): propuesta de quitar la bandera `cancelled` y su limpieza, dando por hecho que React ignora las respuestas tardías. **Rechazado** por Lester: «Respuesta vieja vuelve a pisar». Evidencia: `npm run test:ai -- usePlans` → `Tests 4 failed | 8 passed (12)`, con las 4 pruebas de carrera en rojo. Corrección: se mantiene la versión aprobada con `cancelled`; tras `git restore`, `12 passed (12)` y `57 passed (57)` en la suite completa.
 
 ---
 
@@ -417,4 +419,5 @@ Ninguno. No hubo rechazos durante el laboratorio, por lo que `docs/evidence/reje
 - Línea base: `docs/evidence/baseline-npm-test.txt`, `baseline-npm-run-test-ai.txt`, `baseline-npm-run-build.txt` y las pruebas del ajuste de entorno en `probe-*.txt`.
 - Turnos 1 a 3 (hooks propios): `turn01-*.txt`, `turn02-*.txt`, `turn03-*.txt`.
 - Parte 4: `docs/evidence/part4/original/` (estado original de `src/ai/` y salida con 20 fallos) y `turn4-*.txt` a `turn9-*.txt` (antes/después de cada fallo, suite completa y build final).
+- Rechazo 01: `docs/evidence/rejections/01-usePlans-ai-cancelled.diff` (diff propuesto), `01-candidate-test-ai.txt` y `.json` (4 pruebas en rojo) y `01-after-restore-test-ai.txt` (vuelta al verde).
 - Registro de uso de IA: `docs/ai-use-log.md`.
